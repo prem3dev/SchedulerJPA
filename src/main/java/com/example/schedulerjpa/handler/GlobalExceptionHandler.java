@@ -13,7 +13,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<String> handleResponseStatusException(ResponseStatusException ex) {
-        return new ResponseEntity<>("" + ex.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("존재하지 않은 일정입니다. " + ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(RuntimeException.class)
