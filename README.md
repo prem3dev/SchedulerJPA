@@ -1,6 +1,6 @@
 # Scheduler Web Application
 
-## API Documents
+## Schedule API Documents
 
 ## < 일정 생성 : Post >
 
@@ -28,19 +28,22 @@ localhost:8080/schedules
 
 #### 2. Response Example
 ```xml
-
+{
+    "id": 1,
+    "authorName": "testName",
+    "title": "testTitle",
+    "task": "testTask",
+    "createdAt": "2025-03-31T15:34:41.895599",
+    "modifiedAt": "2025-03-31T15:34:41.895599"
+}
 ```
 #### 3. Http Status Massage
-|          Status           |   HttpStatus |         Message    |  
-|:-------------------------:|:-----:|:------------------:|
-|            등록             |   201 CREATED |            X       |
-|        작성자명 = null        | 400 BAD_REQUEST | "작성자 명 필수로 입력해주셔야 합니다." |
-|        비밀번호 = null        | 400 BAD_REQUEST | "비밀번호를 필수로 입력해주셔야 합니다." |
-|    email 양식에 맞지 않을 경우     | 400 BAD_REQUEST |  "email 양식에 맞지 않습니다." |
-|       email = null        |400 BAD_REQUEST|"Email을 필수로 입력해주셔야 합니다."|
-|    일정 내용(@size > 200)     |400 BAD_REQUEST|  "일정 작성 제한은 200자입니다."|
-|       일정 내용 = null        |400 BAD_REQUEST|"일정을 필수로 작성 해주셔야 합니다."|
-| 각 Field와 다른 타입의 요청을 받을 경우 |400 BAD_REQUEST|"invalid request field value"|
+|          Status           |   HttpStatus |            Message          |  
+|:-------------------------:|:-----:|:---------------------------:|
+|           일정 등록           |   201 CREATED |               X             |
+|       작성자 명 = null        | 400 BAD_REQUEST |    "작성자 명 필수로 입력해주셔야 합니다."  |
+|       일정 제목 = null        | 400 BAD_REQUEST |  "일정 제목을 필수로 입력해주셔야 합니다."   |
+| 각 Field와 다른 타입의 요청을 받을 경우 |400 BAD_REQUEST| "invalid request field value" |
 
 ## < 조건부 전체 일정 조회 : Get >
 
