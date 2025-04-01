@@ -5,9 +5,13 @@ import com.example.schedulerjpa.dto.SearchScheduleResponseDto;
 import com.example.schedulerjpa.dto.UpdateScheduleRequestDto;
 import com.example.schedulerjpa.dto.UpdateScheduleResponseDto;
 
+import java.util.List;
+
 public interface ScheduleService {
 
     public CreationScheduleResponseDto createSchedule(String authorName, String title, String task);
+
+    public List<SearchScheduleResponseDto> findAllSchedules();
 
     public SearchScheduleResponseDto findScheduleById(Long id);
 
