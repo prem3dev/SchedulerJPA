@@ -9,6 +9,7 @@ import com.example.schedulerjpa.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
@@ -41,12 +42,41 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         return new SearchScheduleResponseDto(schedule);
     }
+// querydsl을 이용하여 동적으로 schedules 테이블, 특정 id의 각 컬럼 값을 업데이트 하려 하였으나,
+// JpaAuditing이 반영되지 않아서 참고로만 남겨두었습니다.
+//    @Override
+//    @Transactional
+//    public UpdateScheduleResponseDto updateSchedule(Long id, UpdateScheduleRequestDto requestDto) {
+//
+//    long row  = scheduleRepository.updateById(id, requestDto.getAuthorName(), requestDto.getTitle(), requestDto.getTask());
+//
+//    if(row == 0) {
+//        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+//    }
+//        Schedule schedule = scheduleRepository.findByIdOrElseThrow(id);
+//        return new UpdateScheduleResponseDto(schedule);
+//    }
 
+    @Transactional
     @Override
     public UpdateScheduleResponseDto updateSchedule(Long id, UpdateScheduleRequestDto requestDto) {
 
-        scheduleRepository.findByIdOrElseThrow(id);
-        return null;
+        Schedule schedule = scheduleRepository.findByIdOrElseThrow(id);
+
+       if(requestDto.getAuthorName() != null && !requestDto.getAuthorName().isBlank()) {
+            schedule.setAuthorName(requestDto.getAuthorName());
+        }
+
+        if (requestDto.getTitle() != null && !requestDto.getTitle().isBlank()) {
+            schedule.setTitle(requestDto.getTitle());
+        }
+
+        if (requestDto.getTask() != null && !requestDto.getTask().isBlank()) {
+            schedule.setTask(requestDto.getTask());
+        }
+
+      Schedule newSchedule = scheduleRepository.findByIdOrElseThrow(id);
+        return new UpdateScheduleResponseDto(newSchedule);
     }
 
     @Override

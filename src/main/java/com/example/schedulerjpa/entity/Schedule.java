@@ -2,9 +2,12 @@ package com.example.schedulerjpa.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import org.springframework.boot.autoconfigure.web.WebProperties;
+import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Getter
+@Setter
+@DynamicUpdate
 @Entity
 @Table(name = "schedules")
 public class Schedule extends BaseEntity {
