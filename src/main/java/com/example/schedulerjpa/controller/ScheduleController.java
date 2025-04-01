@@ -2,10 +2,15 @@ package com.example.schedulerjpa.controller;
 
 import com.example.schedulerjpa.dto.*;
 import com.example.schedulerjpa.service.ScheduleService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/schedules")
@@ -15,8 +20,9 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     //일정 생성
+
     @PostMapping
-    public ResponseEntity<CreationScheduleResponseDto> createSchedule(@RequestBody CreationScheduleRequestDto requestDto) {
+    public ResponseEntity<CreationScheduleResponseDto> createSchedule(@RequestBody @Valid CreationScheduleRequestDto requestDto) {
 
         CreationScheduleResponseDto responseDto =
                 scheduleService.createSchedule(
@@ -27,23 +33,33 @@ public class ScheduleController {
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
+    //전체 일정 조회
+    @GetMapping
+    public ResponseEntity<List<SearchScheduleResponseDto>> findAllSchedules() {
+        return new ResponseEntity<>(scheduleService.findAllSchedules(), HttpStatus.OK);
+    }
+
     //개별 일정 조회
-    @GetMapping("/{id}")
-    public ResponseEntity<SearchScheduleResponseDto> findScheduleById (@PathVariable Long id) {
+    @Validated
+    @GetMapping("/individual/{id}")
+    public ResponseEntity<SearchScheduleResponseDto> findScheduleById (
+            @PathVariable @NotNull Long id) {
         return new ResponseEntity<>(scheduleService.findScheduleById(id), HttpStatus.OK);
     }
 
     //개별 일정 동적 수정
-    @PatchMapping("/{id}")
+    @Validated
+    @PatchMapping("/individual/{id}")
     public ResponseEntity<UpdateScheduleResponseDto> updateSchedule(
-            @PathVariable Long id, @RequestBody UpdateScheduleRequestDto requestDto) {
+            @PathVariable @NotNull Long id, @RequestBody @Valid UpdateScheduleRequestDto requestDto) {
 
       return new ResponseEntity<>(scheduleService.updateSchedule(id, requestDto), HttpStatus.OK);
     }
 
     //개별 일정 삭제
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSchedule (@PathVariable Long id) {
+    @Validated
+    @DeleteMapping("/individual/{id}")
+    public ResponseEntity<Void> deleteSchedule (@PathVariable @NotNull Long id) {
 
         scheduleService.deleteSchedule(id);
 
