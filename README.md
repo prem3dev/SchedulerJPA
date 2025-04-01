@@ -38,29 +38,21 @@ localhost:8080/schedules
 }
 ```
 #### 3. Http Status Massage
-|          Status           |   HttpStatus |            Message          |  
-|:-------------------------:|:-----:|:---------------------------:|
-|           일정 등록           |   201 CREATED |               X             |
-|       작성자 명 = null        | 400 BAD_REQUEST |    "작성자 명 필수로 입력해주셔야 합니다."  |
-|       일정 제목 = null        | 400 BAD_REQUEST |  "일정 제목을 필수로 입력해주셔야 합니다."   |
+|          Status           |   HttpStatus |            Message            |  
+|:-------------------------:|:-----:|:-----------------------------:|
+|           일정 등록           |   201 CREATED |               X               |
+|  작성자 명 = null or 공백인 경우   | 400 BAD_REQUEST |    "authorName": "공백일 수 없습니다"   |
+|  일정 제목 = null or 공백인 경우   | 400 BAD_REQUEST |     "title": "공백일 수 없습니다"     |
 | 각 Field와 다른 타입의 요청을 받을 경우 |400 BAD_REQUEST| "invalid request field value" |
 
-## < 조건부 전체 일정 조회 : Get >
+## < 전체 일정 조회 : Get >
 
-작성자 명으로 같은 명의 전체 일정들을 조회 할 수 있습니다.
+전체 일정들을 조회 할 수 있습니다.
 
 ### Request
 
-#### 1. Request URL
+#### Request URL
 localhost:8080/schedules
-
-#### 2. RequestType : RequestParam
-
-#### 3. Request Elements
-
-|    Parameter     |  Type  |      Required      | Description |
-|:----------------:|:------:|:------------------:|:-----------:|
-|       name       | String |         X          |    작성자명     |
 
 ### Response
 
@@ -71,15 +63,37 @@ jason
 #### 2. Response Example
 ```xml
 [
-        
-]
+        {
+        "id": 1,
+        "authorName": "testName",
+        "title": "testTitle",
+        "task": "testTask",
+        "createdAt": "2025-04-01T17:29:10.378806",
+        "modifiedAt": "2025-04-01T17:29:10.378806"
+        },
+        {
+        "id": 2,
+        "authorName": "testName1",
+        "title": "testTitle1",
+        "task": "testTask1",
+        "createdAt": "2025-04-01T17:29:18.287987",
+        "modifiedAt": "2025-04-01T17:29:18.287987"
+        },
+        {
+        "id": 3,
+        "authorName": "testName2",
+        "title": "testTitle2",
+        "task": "testTask2",
+        "createdAt": "2025-04-01T17:29:23.452678",
+        "modifiedAt": "2025-04-01T17:29:23.452678"
+        }
+        ]
 ```
 #### 3. Http Status Massage
-|           Status           |   HttpStatus    | Massage |  
-|:--------------------------:|:---------------:|:-------:|
-|             조회             |     200 OK      |    X    |
-|     조회 결과가 존재하지 않을 경우      |                 |    X    |
-| 조회 parameter 타입과 다른 요청의 경우 | 400 BAD_REQUEST |   "invalid request value"      |
+|           Status      |   HttpStatus    |         Massage         |  
+|:---------------------:|:---------------:|:-----------------------:|
+|             조회        |     200 OK      |            X            |
+|     조회 결과가 존재하지 않을 경우 |  404 NOT_FOUND  |     "요청하신 일정을 찾을 수 없습니다."      |
 
 ## < 작성자 고유 식별 번호를 통한 조회 : Get >
 
@@ -145,25 +159,7 @@ jason
 
 #### 2. Response Example
 ```xml
-{ //old
-        "id": 8,
-        "name": "박효성",
-        "password": "abc123",
-        "email": "abc123@naver.com",
-        "todo": "공부하기",
-        "creationTimestamp": "2025-03-25T16:32:40",
-        "modificationTimestamp": "2025-03-25T16:32:40"
-        }
 
-{//new
-        "id": 8,
-        "name": "prem3",
-        "password": "abc123",
-        "email": "abc123@naver.com",
-        "todo": "과제 제출하기",
-        "creationTimestamp": "2025-03-25T16:32:40",
-        "modificationTimestamp": "2025-03-26T12:34:40"
-        }
 
 ```
 #### 3. Http Status Massage
@@ -204,3 +200,5 @@ localhost:8080/schedules/{authorId}
 |    Field와 다른 타입의 요청을 받을 경우     |400 BAD_REQUEST|"invalid request field value"|
 
 ## ERD
+
+![img.png](img.png)
