@@ -14,6 +14,7 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
+    //일정 생성
     @PostMapping
     public ResponseEntity<CreationScheduleResponseDto> createSchedule(@RequestBody CreationScheduleRequestDto requestDto) {
 
@@ -26,11 +27,13 @@ public class ScheduleController {
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
+    //개별 일정 조회
     @GetMapping("/{id}")
     public ResponseEntity<SearchScheduleResponseDto> findScheduleById (@PathVariable Long id) {
         return new ResponseEntity<>(scheduleService.findScheduleById(id), HttpStatus.OK);
     }
 
+    //개별 일정 동적 수정
     @PatchMapping("/{id}")
     public ResponseEntity<UpdateScheduleResponseDto> updateSchedule(
             @PathVariable Long id, @RequestBody UpdateScheduleRequestDto requestDto) {
@@ -38,6 +41,7 @@ public class ScheduleController {
       return new ResponseEntity<>(scheduleService.updateSchedule(id, requestDto), HttpStatus.OK);
     }
 
+    //개별 일정 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSchedule (@PathVariable Long id) {
 
