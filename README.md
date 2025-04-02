@@ -283,12 +283,14 @@ localhost:8080/users/login
 안녕하세요! "userName"님 환영합니다.
 ```
 #### 3. Http Status Massage
-|          Status           |   HttpStatus    |             Message           |  
-|:-------------------------:|:---------------:|:-----------------------------:|
-|            로그인            |     200 OK      |    안녕하세요! "userName"님 환영합니다.  |
-|  email = null or 공백인 경우   | 400 BAD_REQUEST |      "email": "공백일 수 없습니다"    |
-|    email 형식에 맞지 않은 경우     | 400 BAD_REQUEST | "email": "올바른 형식의 이메일 주소여야 합니다" |
-|   비밀번호 = null or 공백인 경우   | 400 BAD_REQUEST |   "password": "공백일 수 없습니다"    |
+|          Status         |   HttpStatus    |             Message           |  
+|:-----------------------:|:---------------:|:-----------------------------:|
+|            로그인          |     200 OK      |    안녕하세요! "userName"님 환영합니다.  |
+|  email = null or 공백인 경우 | 400 BAD_REQUEST |      "email": "공백일 수 없습니다"    |
+|    email 형식에 맞지 않은 경우   | 400 BAD_REQUEST | "email": "올바른 형식의 이메일 주소여야 합니다" |
+|  email이 일치하는 회원정보가 없는 경우|  404 NOT_FOUND  |                                 |
+|   비밀번호 = null or 공백인 경우 | 400 BAD_REQUEST |   "password": "공백일 수 없습니다"    |
+|  비밀번호가 회원 정보와 일치하지 않는 경우 | 400 BAD_REQUEST |                               |
 | 각 Field와 다른 타입의 요청을 받을 경우 | 400 BAD_REQUEST |  "invalid request field value" |
 
 ## < 전체 사용자 조회 : Get >
@@ -393,11 +395,13 @@ localhost:8080/users/individual/{id}
 
 #### 3. Request Elements
 
-|          | RequestType  |  Type  | Required | Description  |
-|:--------:|:------------:|:------:|:--------:|:------------:|
-|  userid  | PathVariable |  Long  |    O     | 사용자 고유 식별 번호 |
-| userName |  RequestBod  | String |    X     |    사용자 이름    |
-|  email   | RequestBody  | String |    X     |  사용자 email   |
+|                 | RequestType  |  Type  |              Required               | Description  |
+|:---------------:|:------------:|:------:|:-----------------------------------:|:------------:|
+|     userid      | PathVariable |  Long  |                  O                  | 사용자 고유 식별 번호 |
+|    userName     |  RequestBod  | String |                  X                  |    사용자 이름    |
+|      email      | RequestBody  | String |                  X                  |  사용자 email   |
+| presentPassword | RequestBody  | String | X |   현재 비밀번호    |
+|   newPassword   | RequestBody  | String | X(현재 비밀번호 없이 새 비밀번호 만으로 수정되지 않는다.)  |    새 비밀번호    |
 
 ### Response
 
@@ -420,14 +424,15 @@ jason
 ]
 ```
 #### 3. Http Status Massage
-|          Status           |   HttpStatus    |             Massage             |  
-|:-------------------------:|:---------------:|:-------------------------------:|
-|            수정             |     200 OK      |                X                |
-|   수정 요청 사용자가 존재하지 않는 경우   |  404 NOT_FOUND  |     "요청하신 사용자를 찾을 수 없습니다."      |
-|  사용자 식별 번호 타입과 다른 요청의 경우  | 400 BAD_REQUEST |     "invalid request value"     |
-|     사용자 식별 번호 = null      | 400 BAD_REQUEST |       "@Validated failed"       |
-|    email 형식에 맞지 않은 경우     | 400 BAD_REQUEST | "email": "올바른 형식의 이메일 주소여야 합니다" |
-| 각 Field와 다른 타입의 요청을 받을 경우 | 400 BAD_REQUEST |  "invalid request field value"  |
+|           Status            |   HttpStatus    |             Massage             |  
+|:---------------------------:|:---------------:|:-------------------------------:|
+|             수정              |     200 OK      |                X                |
+|    수정 요청 사용자가 존재하지 않는 경우    |  404 NOT_FOUND  |     "요청하신 사용자를 찾을 수 없습니다."      |
+|   사용자 식별 번호 타입과 다른 요청의 경우   | 400 BAD_REQUEST |     "invalid request value"     |
+|      사용자 식별 번호 = null       | 400 BAD_REQUEST |       "@Validated failed"       |
+|     email 형식에 맞지 않은 경우      | 400 BAD_REQUEST | "email": "올바른 형식의 이메일 주소여야 합니다" |
+| 현재 비밀 번호가 회원 정보와 일치하지 않는 경우 | 400 BAD_REQUEST |                                 |
+|  각 Field와 다른 타입의 요청을 받을 경우  | 400 BAD_REQUEST |  "invalid request field value"  |
 
 ## < 사용자 고유 식별 번호를 통한 사용자 정보 삭제 : Delete >
 
@@ -442,19 +447,23 @@ localhost:8080/users/individual/{id}
 
 #### 3. Request Elements
 
-|        | RequestType  |  Type  | Required | Description  |
-|:------:|:--------:|:------:|:--------:|:------------:|
-| userId | PathVariable |  Long  |    O     | 사용자 고유 식별 번호 |
+|          |  RequestType  |  Type  | Required | Description |
+|:--------:|:-------------:|:------:|:--------:|:----------:|
+|  userId  | Path Variable |  Long  |    O     | 사용자 고유 식별 번호 |
+| password | Request Param | String |    O     |    비밀 번호   |
 
 ### Response
 
 #### Http Status Massage
-|         Status          |  HttpStatus   |            Massage            |  
-|:-----------------------:|:-------------:|:-----------------------------:|
-|           삭제            |    200 OK     |               X               |
-|  삭제 요청 사용자가 존재하지 않는 경우  | 404 NOT_FOUND |    "요청하신 사용자를 찾을 수 없습니다."     |
-| 작성자 식별 번호 타입과 다른 요청의 경우 | 400 BAD_REQUEST |    "invalid request value"    |
-|    작성자 식별 번호 = null     | 400 BAD_REQUEST |      "@Validated failed"      |
+|          Status          |   HttpStatus    |         Massage         |  
+|:------------------------:|:---------------:|:-----------------------:|
+|            삭제            |     200 OK      |            X            |
+|  삭제 요청 사용자가 존재하지 않는 경우   |  404 NOT_FOUND  | "요청하신 사용자를 찾을 수 없습니다."  |
+| 작성자 식별 번호 타입과 다른 요청의 경우  | 400 BAD_REQUEST | "invalid request value" |
+|     작성자 식별 번호 = null     | 400 BAD_REQUEST |   "@Validated failed"   |
+| 비밀 번호 파라미터 타입과 다른 요청의 경우 | 400 BAD_REQUEST | "invalid request value" |
+|  비밀 번호 = null or 공백인 경우  | 400 BAD_REQUEST |   "@Validated failed"   |
+| 비밀 번호가 회원정보랑 일치하지 않는 경우  | 400 BAD_REQUEST |                         |
 
 ## ERD
 ![img_1.png](ERD.png)
