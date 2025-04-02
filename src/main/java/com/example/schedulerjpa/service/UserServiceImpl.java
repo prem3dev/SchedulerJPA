@@ -1,9 +1,6 @@
 package com.example.schedulerjpa.service;
 
-import com.example.schedulerjpa.dto.SearchUserResponseDto;
-import com.example.schedulerjpa.dto.SignUpUserResponseDto;
-import com.example.schedulerjpa.dto.UpdateUserRequestDto;
-import com.example.schedulerjpa.dto.UpdateUserResponseDto;
+import com.example.schedulerjpa.dto.*;
 import com.example.schedulerjpa.entity.User;
 import com.example.schedulerjpa.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +30,12 @@ public class UserServiceImpl implements UserService{
                 savedUser.getEmail(),
                 savedUser.getCreatedAt(),
                 savedUser.getModifiedAt());
+    }
+
+    @Override
+    public LoginResponseDto login(String email, String password) {
+        User user = userRepository.findUserByEmailAndPasswordOrElseThrow(email, password);
+        return new LoginResponseDto(user.getId(), user.getUserName());
     }
 
     @Override
