@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -17,5 +18,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     default User findUserByIdOrElseThrow(Long id) {
         return findById(id).orElseThrow(() ->new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+   Optional<User> findUserByEmailAndPassword(String email, String password);
+
+    default User findUserByEmailAndPasswordOrElseThrow(String email, String password) {
+        return findUserByEmailAndPassword(email, password).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 }

@@ -1,17 +1,16 @@
 package com.example.schedulerjpa.service;
 
-import com.example.schedulerjpa.dto.SearchUserResponseDto;
-import com.example.schedulerjpa.dto.SignUpUserResponseDto;
-import com.example.schedulerjpa.dto.UpdateUserRequestDto;
-import com.example.schedulerjpa.dto.UpdateUserResponseDto;
+import com.example.schedulerjpa.dto.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.http.HttpStatusCode;
 
 import java.util.List;
 
 public interface UserService {
 
     SignUpUserResponseDto signUpUser(String userName, String email, String password);
+
+    LoginResponseDto login(@NotBlank String email, @NotBlank String password);
 
     List<SearchUserResponseDto> findAllUsers();
 
