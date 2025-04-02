@@ -211,7 +211,7 @@ localhost:8080/schedules/individual/{id}
 
 ## User API Documents
 
-## < 사용자 등록 : Post >
+## < 회원가입 : Post >
 
 사용자 정보를 DB에 등록합니다.
 
@@ -226,9 +226,10 @@ localhost:8080/users
 
 
 | Parameter |  Type  | Required | Description |
-|:---------:|:------:|:--------:|------------|
-| userName  | String |    O     | 사용자 이름     |
-|   email   | String |    O     | 사용자 email  |
+|:---------:|:------:|:--------:|:---------:|
+| userName  | String |    O     |    사용자 이름 |
+|   email   | String |    O     |  사용자 email |
+| password  | String |    o     |     비밀번호  |
 
 ### Response
 
@@ -251,6 +252,7 @@ localhost:8080/users
 |  email = null or 공백인 경우   | 400 BAD_REQUEST |      "email": "공백일 수 없습니다"      |
 |    email 형식에 맞지 않은 경우     | 400 BAD_REQUEST | "email": "올바른 형식의 이메일 주소여야 합니다" |
 |  사용자 이름 = null or 공백인 경우  | 400 BAD_REQUEST |    "userName": "공백일 수 없습니다"     |
+|   비밀번호 = null or 공백인 경우   | 400 BAD_REQUEST |    "password": "공백일 수 없습니다"     |
 | 각 Field와 다른 타입의 요청을 받을 경우 | 400 BAD_REQUEST |  "invalid request field value"  |
 
 ## < 전체 사용자 조회 : Get >
