@@ -211,7 +211,7 @@ localhost:8080/schedules/individual/{id}
 
 ## User API Documents
 
-## < 사용자 등록 : Post >
+## < 회원가입 : Post >
 
 사용자 정보를 DB에 등록합니다.
 
@@ -226,9 +226,10 @@ localhost:8080/users
 
 
 | Parameter |  Type  | Required | Description |
-|:---------:|:------:|:--------:|------------|
-| userName  | String |    O     | 사용자 이름     |
-|   email   | String |    O     | 사용자 email  |
+|:---------:|:------:|:--------:|----------|
+| userName  | String |    O     | 사용자 이름   |
+|   email   | String |    O     | 사용자 email |
+| password  | String |    0     | 비밀번호 |
 
 ### Response
 
@@ -245,13 +246,50 @@ localhost:8080/users
         }
 ```
 #### 3. Http Status Massage
-|          Status           |   HttpStatus    |             Message             |  
-|:-------------------------:|:---------------:|:-------------------------------:|
-|           일정 등록           |   201 CREATED   |                X                |
-|  email = null or 공백인 경우   | 400 BAD_REQUEST |      "email": "공백일 수 없습니다"      |
+|          Status           |   HttpStatus  |             Message            |  
+|:-------------------------:|:-------------:|:------------------------------:|
+|          사용자 등록           |   201 CREATED |                X               |
+|  email = null or 공백인 경우   | 400 BAD_REQUEST |      "email": "공백일 수 없습니다"     |
 |    email 형식에 맞지 않은 경우     | 400 BAD_REQUEST | "email": "올바른 형식의 이메일 주소여야 합니다" |
-|  사용자 이름 = null or 공백인 경우  | 400 BAD_REQUEST |    "userName": "공백일 수 없습니다"     |
-| 각 Field와 다른 타입의 요청을 받을 경우 | 400 BAD_REQUEST |  "invalid request field value"  |
+|  사용자 이름 = null or 공백인 경우  | 400 BAD_REQUEST |    "userName": "공백일 수 없습니다"    |
+|   비밀번호 = null or 공백인 경우   |400 BAD_REQUEST|   "password": "공백일 수 없습니다"     |
+| 각 Field와 다른 타입의 요청을 받을 경우 | 400 BAD_REQUEST |  "invalid request field value" |
+
+## < 로그인 : Post >
+
+사용자 email과 password로 로그인 합니다.
+
+### Request
+
+#### 1. Request URL
+localhost:8080/users/login
+
+#### 2. RequestType : RequestBody
+
+#### 3. Request Elements
+
+
+| Parameter |  Type  | Required | Description |
+|:---------:|:------:|:--------:|----------|
+|   email   | String |    O     | 사용자 email |
+| password  | String |    0     | 비밀번호 |
+
+### Response
+
+#### 1. Content-Type : String
+
+#### 2. Response Example
+```xml
+안녕하세요! "userName"님 환영합니다.
+```
+#### 3. Http Status Massage
+|          Status           |   HttpStatus    |             Message           |  
+|:-------------------------:|:---------------:|:-----------------------------:|
+|            로그인            |     200 OK      |    안녕하세요! "userName"님 환영합니다.  |
+|  email = null or 공백인 경우   | 400 BAD_REQUEST |      "email": "공백일 수 없습니다"    |
+|    email 형식에 맞지 않은 경우     | 400 BAD_REQUEST | "email": "올바른 형식의 이메일 주소여야 합니다" |
+|   비밀번호 = null or 공백인 경우   | 400 BAD_REQUEST |   "password": "공백일 수 없습니다"    |
+| 각 Field와 다른 타입의 요청을 받을 경우 | 400 BAD_REQUEST |  "invalid request field value" |
 
 ## < 전체 사용자 조회 : Get >
 
@@ -295,10 +333,10 @@ jason
         ]
 ```
 #### 3. Http Status Massage
-|           Status      |   HttpStatus    |         Massage         |  
-|:---------------------:|:---------------:|:-----------------------:|
-|             조회        |     200 OK      |            X            |
-|     조회 결과가 존재하지 않을 경우 |  404 NOT_FOUND  |     "요청하신 일정을 찾을 수 없습니다."      |
+|           Status      |   HttpStatus    |        Massage         |  
+|:---------------------:|:---------------:|:----------------------:|
+|             조회        |     200 OK      |           X            |
+|     조회 결과가 존재하지 않을 경우 |  404 NOT_FOUND  | "요청하신 사용자를 찾을 수 없습니다." |
 
 ## < 사용자 고유 식별 번호를 통한 사용자 조회 : Get >
 
@@ -356,9 +394,9 @@ localhost:8080/users/individual/{id}
 #### 3. Request Elements
 
 |          | RequestType  |  Type  | Required | Description  |
-|:--------:|:--------:|:------:|:--------:|:------------:|
+|:--------:|:------------:|:------:|:--------:|:------------:|
 |  userid  | PathVariable |  Long  |    O     | 사용자 고유 식별 번호 |
-| userName | RequestBod   | String |    X     |    사용자 이름    |
+| userName |  RequestBod  | String |    X     |    사용자 이름    |
 |  email   | RequestBody  | String |    X     |  사용자 email   |
 
 ### Response
@@ -388,8 +426,8 @@ jason
 |   수정 요청 사용자가 존재하지 않는 경우   |  404 NOT_FOUND  |     "요청하신 사용자를 찾을 수 없습니다."      |
 |  사용자 식별 번호 타입과 다른 요청의 경우  | 400 BAD_REQUEST |     "invalid request value"     |
 |     사용자 식별 번호 = null      | 400 BAD_REQUEST |       "@Validated failed"       |
-|    email 형식에 맞지 않은 경우     |            400 BAD_REQUEST     | "email": "올바른 형식의 이메일 주소여야 합니다" |
-| 각 Field와 다른 타입의 요청을 받을 경우 |400 BAD_REQUEST|  "invalid request field value"  |
+|    email 형식에 맞지 않은 경우     | 400 BAD_REQUEST | "email": "올바른 형식의 이메일 주소여야 합니다" |
+| 각 Field와 다른 타입의 요청을 받을 경우 | 400 BAD_REQUEST |  "invalid request field value"  |
 
 ## < 사용자 고유 식별 번호를 통한 사용자 정보 삭제 : Delete >
 
