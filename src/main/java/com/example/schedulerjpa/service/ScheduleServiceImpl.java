@@ -40,12 +40,12 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public List<SearchScheduleResponseDto> findAllSchedules() {
-        List<Schedule> schedules = scheduleRepository.findAll();
+        List<Schedule> scheduleList = scheduleRepository.findAll();
 
-        if(schedules.isEmpty()) {
+        if(scheduleList.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return schedules.stream().map(SearchScheduleResponseDto::new).toList();
+        return scheduleList.stream().map(SearchScheduleResponseDto::new).toList();
     }
 
     @Override
