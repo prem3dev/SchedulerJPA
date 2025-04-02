@@ -11,8 +11,6 @@ public class CreationScheduleResponseDto {
 
     private final Long id;
 
-    private final String authorName;
-
     private final String title;
 
     private final String task;

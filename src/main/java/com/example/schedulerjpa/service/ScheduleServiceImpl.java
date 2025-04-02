@@ -5,7 +5,9 @@ import com.example.schedulerjpa.dto.SearchScheduleResponseDto;
 import com.example.schedulerjpa.dto.UpdateScheduleRequestDto;
 import com.example.schedulerjpa.dto.UpdateScheduleResponseDto;
 import com.example.schedulerjpa.entity.Schedule;
+import com.example.schedulerjpa.entity.User;
 import com.example.schedulerjpa.repository.ScheduleRepository;
+import com.example.schedulerjpa.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,16 +21,17 @@ import java.util.List;
 public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final UserRepository userRepository;
 
     @Override
-    public CreationScheduleResponseDto createSchedule(String authorName, String title, String task) {
+    public CreationScheduleResponseDto createSchedule(String email, String title, String task) {
 
-        Schedule schedule = new Schedule(authorName, title, task);
-
+        Schedule schedule = new Schedule(title, task);
+        User findedUser = userRepository.findUserByUserEmailOrElseThrow(email);
+        schedule.setUser(findedUser);
         Schedule savedSchedule = scheduleRepository.save(schedule);
         return new CreationScheduleResponseDto(
                 savedSchedule.getId(),
-                savedSchedule.getAuthorName(),
                 savedSchedule.getTitle(),
                 savedSchedule.getTask(),
                 savedSchedule.getCreatedAt(),
@@ -72,10 +75,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     public UpdateScheduleResponseDto updateSchedule(Long id, UpdateScheduleRequestDto requestDto) {
 
         Schedule schedule = scheduleRepository.findByIdOrElseThrow(id);
-
-       if(requestDto.getAuthorName() != null && !requestDto.getAuthorName().isBlank()) {
-            schedule.setAuthorName(requestDto.getAuthorName());
-        }
 
         if (requestDto.getTitle() != null && !requestDto.getTitle().isBlank()) {
             schedule.setTitle(requestDto.getTitle());

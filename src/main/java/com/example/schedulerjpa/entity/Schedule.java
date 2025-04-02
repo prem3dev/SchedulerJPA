@@ -6,7 +6,6 @@ import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 
 @Getter
-@Setter
 @DynamicUpdate
 @Entity
 @Table(name = "schedules")
@@ -16,20 +15,23 @@ public class Schedule extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String authorName;
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
+    @Setter
     @Column(nullable = false)
     private String title;
 
+    @Setter
     @Column(columnDefinition = "longtext")
     private String task;
 
     public Schedule() {
     }
 
-    public Schedule(String authorName, String title, String task) {
-        this.authorName = authorName;
+    public Schedule(String title, String task) {
         this.title = title;
         this.task = task;
     }

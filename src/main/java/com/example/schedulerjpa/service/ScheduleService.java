@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ScheduleService {
 
-    public CreationScheduleResponseDto createSchedule(String authorName, String title, String task);
+    public CreationScheduleResponseDto createSchedule(String email, String title, String task);
 
     public List<SearchScheduleResponseDto> findAllSchedules();
 

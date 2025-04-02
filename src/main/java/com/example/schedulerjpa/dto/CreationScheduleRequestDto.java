@@ -9,7 +9,7 @@ import lombok.Getter;
 public class CreationScheduleRequestDto {
 
     @NotBlank
-    private final String authorName;
+    private final String email;
 
     @NotBlank
     private final String title;

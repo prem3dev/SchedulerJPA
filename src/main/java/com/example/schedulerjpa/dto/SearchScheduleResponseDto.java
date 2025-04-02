@@ -11,8 +11,6 @@ public class SearchScheduleResponseDto {
 
     private final Long id;
 
-    private final String authorName;
-
     private final String title;
 
     private final String task;
@@ -24,7 +22,6 @@ public class SearchScheduleResponseDto {
     public SearchScheduleResponseDto(Schedule schedule) {
 
         this.id = schedule.getId();
-        this.authorName = schedule.getAuthorName();
         this.title = schedule.getTitle();
         this.task = schedule.getTask();
         this.createdAt = schedule.getCreatedAt();

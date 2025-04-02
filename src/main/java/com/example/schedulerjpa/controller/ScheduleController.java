@@ -20,13 +20,12 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     //일정 생성
-
     @PostMapping
     public ResponseEntity<CreationScheduleResponseDto> createSchedule(@RequestBody @Valid CreationScheduleRequestDto requestDto) {
 
         CreationScheduleResponseDto responseDto =
                 scheduleService.createSchedule(
-                        requestDto.getAuthorName(),
+                        requestDto.getEmail(),
                         requestDto.getTitle(),
                         requestDto.getTask()
                 );
