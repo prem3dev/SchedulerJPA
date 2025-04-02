@@ -21,9 +21,9 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
 
     @Override
-    public SignUpUserResponseDto signUpUser(String userName, String email) {
+    public SignUpUserResponseDto signUpUser(String userName, String email, String password) {
 
-        User user = new User(userName, email);
+        User user = new User(userName, email, password);
 
         User savedUser = userRepository.save(user);
 

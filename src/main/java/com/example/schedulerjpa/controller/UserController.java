@@ -23,7 +23,8 @@ public class UserController {
     public ResponseEntity<SignUpUserResponseDto> signUpUser (@RequestBody @Valid SignUpUserRequestDto requestDto) {
         return new ResponseEntity<>(userService.signUpUser(
                 requestDto.getUserName(),
-                requestDto.getEmail()
+                requestDto.getEmail(),
+                requestDto.getPassword()
         ), HttpStatus.CREATED);
     }
 

@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface UserService {
 
-    SignUpUserResponseDto signUpUser(String userName, String email);
+    SignUpUserResponseDto signUpUser(String userName, String email, String password);
 
     List<SearchUserResponseDto> findAllUsers();
 
