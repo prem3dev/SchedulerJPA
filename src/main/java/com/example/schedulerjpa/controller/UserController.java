@@ -1,7 +1,10 @@
 package com.example.schedulerjpa.controller;
 
+import com.example.schedulerjpa.common.Const;
 import com.example.schedulerjpa.dto.*;
 import com.example.schedulerjpa.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +31,19 @@ public class UserController {
         ), HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody @Valid LoginRequestDto requestDto, HttpServletRequest request) {
+
+        LoginResponseDto responseDto = userService.login(requestDto.getEmail(), requestDto.getPassword());
+
+     HttpSession session = request.getSession();
+
+     session.setAttribute(Const.LOGIN_USER, responseDto.getId());
+
+     return new ResponseEntity<>("안녕하세요! " + responseDto.getLoginUserName() + "님 환영합니다.", HttpStatus.OK);
+    }
+
+    @GetMapping("/total")
     public ResponseEntity<List<SearchUserResponseDto>> findAllUsers() {
         return new ResponseEntity<>(userService.findAllUsers(), HttpStatus.OK);
     }
