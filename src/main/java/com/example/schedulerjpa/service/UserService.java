@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface UserService {
 
-    SignUpUserResponseDto signUpUser(String userName, String email, String password);
+    SignUpUserResponseDto signUpUser(SignUpUserRequestDto signUpUserRequestDto);
 
-    LoginResponseDto login(@NotBlank String email, @NotBlank String password);
+    LoginResponseDto login(LoginRequestDto loginRequestDto);
 
     List<SearchUserResponseDto> findAllUsers();
 
@@ -18,5 +18,5 @@ public interface UserService {
 
     UpdateUserResponseDto updateUser(Long id, UpdateUserRequestDto requestDto);
 
-    void deleteUserById(@NotNull Long id);
+    void deleteUserById(@NotNull Long id, String password);
 }

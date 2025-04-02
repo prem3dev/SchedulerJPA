@@ -1,5 +1,6 @@
 package com.example.schedulerjpa.service;
 
+import com.example.schedulerjpa.config.PasswordEncoder;
 import com.example.schedulerjpa.dto.*;
 import com.example.schedulerjpa.entity.User;
 import com.example.schedulerjpa.repository.UserRepository;
@@ -18,9 +19,15 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
 
     @Override
-    public SignUpUserResponseDto signUpUser(String userName, String email, String password) {
+    public SignUpUserResponseDto signUpUser(SignUpUserRequestDto signUpUserRequestDto) {
 
-        User user = new User(userName, email, password);
+        PasswordEncoder passwordEncoder = new PasswordEncoder();
+
+        String encodedPassword = passwordEncoder.encode(signUpUserRequestDto.getPassword());
+        User user = new User(
+                signUpUserRequestDto.getUserName(),
+                signUpUserRequestDto.getEmail(),
+                encodedPassword);
 
         User savedUser = userRepository.save(user);
 
@@ -33,9 +40,14 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public LoginResponseDto login(String email, String password) {
-        User user = userRepository.findUserByEmailAndPasswordOrElseThrow(email, password);
-        return new LoginResponseDto(user.getId(), user.getUserName());
+    public LoginResponseDto login(LoginRequestDto loginRequestDto) {
+        PasswordEncoder passwordEncoder = new PasswordEncoder();
+        User user = userRepository.findUserByUserEmailOrElseThrow(loginRequestDto.getEmail());
+
+     if(passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
+         return new LoginResponseDto(user.getId(), user.getUserName());
+     } else {throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+     }
     }
 
     @Override
@@ -58,6 +70,15 @@ public class UserServiceImpl implements UserService{
     public UpdateUserResponseDto updateUser(Long id, UpdateUserRequestDto requestDto) {
         User user = userRepository.findUserByIdOrElseThrow(id);
 
+        if (requestDto.getPresentPassword() != null && !requestDto.getPresentPassword().isBlank()) {
+            PasswordEncoder passwordEncoder = new PasswordEncoder();
+           if (passwordEncoder.matches(requestDto.getPresentPassword(), user.getPassword())) {
+               if(requestDto.getNewPassword() != null && !requestDto.getNewPassword().isBlank()) {
+                   user.setPassword(requestDto.getNewPassword());
+               }
+           } else {throw new ResponseStatusException(HttpStatus.BAD_REQUEST);}
+        }
+
         if (requestDto.getUserName() != null && !requestDto.getUserName().isBlank()) {
             user.setUserName(requestDto.getUserName());
         }
@@ -70,9 +91,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void deleteUserById(Long id) {
+    public void deleteUserById(Long id, String password) {
         User user = userRepository.findUserByIdOrElseThrow(id);
-
-        userRepository.delete(user);
+        PasswordEncoder passwordEncoder = new PasswordEncoder();
+        if(passwordEncoder.matches(password, user.getPassword())) {
+            userRepository.delete(user);
+        } else {throw new ResponseStatusException(HttpStatus.BAD_REQUEST);}
     }
 }

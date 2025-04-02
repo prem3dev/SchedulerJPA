@@ -6,6 +6,7 @@ import com.example.schedulerjpa.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,17 +25,14 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<SignUpUserResponseDto> signUpUser (@RequestBody @Valid SignUpUserRequestDto requestDto) {
-        return new ResponseEntity<>(userService.signUpUser(
-                requestDto.getUserName(),
-                requestDto.getEmail(),
-                requestDto.getPassword()
+        return new ResponseEntity<>(userService.signUpUser(requestDto
         ), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody @Valid LoginRequestDto requestDto, HttpServletRequest request) {
 
-        LoginResponseDto responseDto = userService.login(requestDto.getEmail(), requestDto.getPassword());
+        LoginResponseDto responseDto = userService.login(requestDto);
 
      HttpSession session = request.getSession();
 
@@ -63,8 +61,8 @@ public class UserController {
 
     @Validated
     @DeleteMapping("/individual/{id}")
-    public ResponseEntity<Void> deleteUserById(@PathVariable @NotNull Long id) {
-       userService.deleteUserById(id);
+    public ResponseEntity<Void> deleteUserById(@PathVariable @NotNull Long id, @RequestParam @NotBlank String password) {
+       userService.deleteUserById(id, password);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
