@@ -1,4 +1,4 @@
-package com.example.schedulerjpa.handler;
+package com.example.schedulerjpa.exceptionhandler;
 
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;

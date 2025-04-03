@@ -1,6 +1,5 @@
-package com.example.schedulerjpa.dto;
+package com.example.schedulerjpa.dto.userdto;
 
-import com.example.schedulerjpa.entity.Schedule;
 import com.example.schedulerjpa.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
-public class UpdateUserResponseDto {
-
+public class SearchUserResponseDto {
 
     private final Long id;
 
@@ -22,7 +20,7 @@ public class UpdateUserResponseDto {
 
     private final LocalDateTime modifiedAt;
 
-    public UpdateUserResponseDto(User user) {
+    public SearchUserResponseDto(User user) {
 
         this.id = user.getId();
         this.userName = user.getUserName();

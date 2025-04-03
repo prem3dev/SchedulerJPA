@@ -1,4 +1,4 @@
-package com.example.schedulerjpa.dto;
+package com.example.schedulerjpa.dto.userdto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -7,10 +7,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class SignUpUserRequestDto {
-
-    @NotBlank
-    private final String userName;
+public class LoginRequestDto {
 
     @NotBlank
     @Email

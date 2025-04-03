@@ -1,4 +1,4 @@
-package com.example.schedulerjpa.dto;
+package com.example.schedulerjpa.dto.userdto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
-public class CreationScheduleResponseDto {
+public class SignUpUserResponseDto {
 
     private final Long id;
 
-    private final String title;
+    private final String userName;
 
-    private final String task;
+    private final String email;
 
     private final LocalDateTime createdAt;
 

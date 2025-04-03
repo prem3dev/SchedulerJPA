@@ -1,8 +1,10 @@
-package com.example.schedulerjpa.dto;
+package com.example.schedulerjpa.dto.scheduledto;
 
+import com.example.schedulerjpa.customannotation.NotAllNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@NotAllNull
 @Getter
 @AllArgsConstructor
 public class UpdateScheduleRequestDto {
