@@ -32,22 +32,25 @@ public class ScheduleController {
     }
 
     //전체 일정 조회
-    @GetMapping("/total")
-    public ResponseEntity<List<SearchScheduleResponseDto>> findAllSchedules() {
-        return new ResponseEntity<>(scheduleService.findAllSchedules(), HttpStatus.OK);
+    @GetMapping("/pages")
+    public ResponseEntity<List<SearchSchedulesPageResponseDto>> findAllSchedules(
+            @RequestParam(defaultValue = "0") int page, // 현재 페이지
+            @RequestParam(defaultValue = "10") int size // 크기
+    ) {
+        return new ResponseEntity<>(scheduleService.findAllSchedules(page, size), HttpStatus.OK);
     }
 
     //개별 일정 조회
     @Validated
-    @GetMapping("/individual/{id}")
-    public ResponseEntity<SearchScheduleResponseDto> findScheduleById (
+    @GetMapping("/individuals/{id}")
+    public ResponseEntity<SearchScheduleByIdResponseDto> findScheduleById (
             @PathVariable @NotNull Long id) {
         return new ResponseEntity<>(scheduleService.findScheduleById(id), HttpStatus.OK);
     }
 
     //개별 일정 동적 수정
     @Validated
-    @PatchMapping("/individual/{id}")
+    @PatchMapping("/individuals/{id}")
     public ResponseEntity<UpdateScheduleResponseDto> updateSchedule(
             @PathVariable @NotNull Long id,
             @RequestBody @Valid UpdateScheduleRequestDto requestDto,
@@ -58,7 +61,7 @@ public class ScheduleController {
 
     //개별 일정 삭제
     @Validated
-    @DeleteMapping("/individual/{id}")
+    @DeleteMapping("/individuals/{id}")
     public ResponseEntity<Void> deleteSchedule (
             @PathVariable @NotNull Long id,
             @SessionAttribute(name = Const.LOGIN_USER, required = false) Long loginUserId) {

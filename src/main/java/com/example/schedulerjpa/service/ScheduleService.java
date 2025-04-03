@@ -1,9 +1,6 @@
 package com.example.schedulerjpa.service;
 
-import com.example.schedulerjpa.dto.scheduledto.CreationScheduleResponseDto;
-import com.example.schedulerjpa.dto.scheduledto.SearchScheduleResponseDto;
-import com.example.schedulerjpa.dto.scheduledto.UpdateScheduleRequestDto;
-import com.example.schedulerjpa.dto.scheduledto.UpdateScheduleResponseDto;
+import com.example.schedulerjpa.dto.scheduledto.*;
 
 import java.util.List;
 
@@ -11,9 +8,9 @@ public interface ScheduleService {
 
     public CreationScheduleResponseDto createSchedule(Long id, String title, String task);
 
-    public List<SearchScheduleResponseDto> findAllSchedules();
+    public List<SearchSchedulesPageResponseDto> findAllSchedules(int page, int size);
 
-    public SearchScheduleResponseDto findScheduleById(Long id);
+    public SearchScheduleByIdResponseDto findScheduleById(Long id);
 
     public UpdateScheduleResponseDto updateSchedule(Long id, UpdateScheduleRequestDto requestDto, Long loginUserId);
 

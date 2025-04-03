@@ -1,14 +1,13 @@
 package com.example.schedulerjpa.service;
 
-import com.example.schedulerjpa.dto.scheduledto.CreationScheduleResponseDto;
-import com.example.schedulerjpa.dto.scheduledto.SearchScheduleResponseDto;
-import com.example.schedulerjpa.dto.scheduledto.UpdateScheduleRequestDto;
-import com.example.schedulerjpa.dto.scheduledto.UpdateScheduleResponseDto;
+import com.example.schedulerjpa.dto.scheduledto.*;
 import com.example.schedulerjpa.entity.Schedule;
 import com.example.schedulerjpa.entity.User;
 import com.example.schedulerjpa.repository.ScheduleRepository;
 import com.example.schedulerjpa.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,21 +39,24 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<SearchScheduleResponseDto> findAllSchedules() {
-        List<Schedule> scheduleList = scheduleRepository.findAll();
+    public List<SearchSchedulesPageResponseDto> findAllSchedules(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+      List<SearchSchedulesPageResponseDto> scheduleList = scheduleRepository.findAllSchedules(pageable).getContent();
 
         if(scheduleList.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return scheduleList.stream().map(SearchScheduleResponseDto::new).toList();
+        return scheduleList;
     }
 
     @Override
-    public SearchScheduleResponseDto findScheduleById(Long id) {
+    public SearchScheduleByIdResponseDto findScheduleById(Long id) {
 
         Schedule schedule = scheduleRepository.findByIdOrElseThrow(id);
 
-        return new SearchScheduleResponseDto(schedule);
+        return new SearchScheduleByIdResponseDto(schedule);
     }
 // querydsl을 이용하여 동적으로 schedules 테이블, 특정 id의 각 컬럼 값을 업데이트 하려 하였으나,
 // JpaAuditing이 반영되지 않아서 참고로만 남겨두었습니다.
