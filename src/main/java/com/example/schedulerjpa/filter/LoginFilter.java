@@ -1,5 +1,6 @@
 package com.example.schedulerjpa.filter;
 
+import com.example.schedulerjpa.common.Const;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,11 +26,10 @@ public class LoginFilter implements Filter {
 
             HttpSession session = httpServletRequest.getSession(false);
 
-            if (session == null || session.getAttribute("SessionKey") == null) {
+            if (session == null || session.getAttribute(Const.LOGIN_USER) == null) {
                 throw new RuntimeException("로그인 해주세요.");
             }
-
-
+            System.out.println("로그인에 성공했습니다.");
 
         }
         //1. 처음 WHITE_LIST에 등록되 요청이라면 filterChain.doFilter()가 호출
