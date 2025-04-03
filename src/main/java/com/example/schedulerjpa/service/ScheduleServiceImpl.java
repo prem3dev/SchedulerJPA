@@ -1,9 +1,9 @@
 package com.example.schedulerjpa.service;
 
-import com.example.schedulerjpa.dto.CreationScheduleResponseDto;
-import com.example.schedulerjpa.dto.SearchScheduleResponseDto;
-import com.example.schedulerjpa.dto.UpdateScheduleRequestDto;
-import com.example.schedulerjpa.dto.UpdateScheduleResponseDto;
+import com.example.schedulerjpa.dto.scheduledto.CreationScheduleResponseDto;
+import com.example.schedulerjpa.dto.scheduledto.SearchScheduleResponseDto;
+import com.example.schedulerjpa.dto.scheduledto.UpdateScheduleRequestDto;
+import com.example.schedulerjpa.dto.scheduledto.UpdateScheduleResponseDto;
 import com.example.schedulerjpa.entity.Schedule;
 import com.example.schedulerjpa.entity.User;
 import com.example.schedulerjpa.repository.ScheduleRepository;
@@ -23,11 +23,12 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     @Override
-    public CreationScheduleResponseDto createSchedule(String email, String title, String task) {
+    public CreationScheduleResponseDto createSchedule(Long id,String title, String task) {
 
         Schedule schedule = new Schedule(title, task);
-        User findedUser = userRepository.findUserByUserEmailOrElseThrow(email);
+        User findedUser = userRepository.findUserByIdOrElseThrow(id);
         schedule.setUser(findedUser);
         Schedule savedSchedule = scheduleRepository.save(schedule);
         return new CreationScheduleResponseDto(
@@ -72,9 +73,14 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Transactional
     @Override
-    public UpdateScheduleResponseDto updateSchedule(Long id, UpdateScheduleRequestDto requestDto) {
+    public UpdateScheduleResponseDto updateSchedule(Long id, UpdateScheduleRequestDto requestDto, Long loginUserId) {
 
+        User user = userRepository.findUserByIdOrElseThrow(loginUserId);
         Schedule schedule = scheduleRepository.findByIdOrElseThrow(id);
+
+        if (!user.getPassword().equals(schedule.getUser().getPassword())) {
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
 
         if (requestDto.getTitle() != null && !requestDto.getTitle().isBlank()) {
             schedule.setTitle(requestDto.getTitle());
@@ -83,15 +89,19 @@ public class ScheduleServiceImpl implements ScheduleService {
         if (requestDto.getTask() != null && !requestDto.getTask().isBlank()) {
             schedule.setTask(requestDto.getTask());
         }
-
-      Schedule newSchedule = scheduleRepository.findByIdOrElseThrow(id);
-        return new UpdateScheduleResponseDto(newSchedule);
+        return new UpdateScheduleResponseDto(schedule);
     }
 
+    @Transactional
     @Override
-    public void deleteSchedule(Long id) {
+    public void deleteSchedule(Long id, Long loginUserId) {
 
+        User user = userRepository.findUserByIdOrElseThrow(loginUserId);
         Schedule schedule = scheduleRepository.findByIdOrElseThrow(id);
+
+        if (!user.getPassword().equals(schedule.getUser().getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
 
         scheduleRepository.delete(schedule);
     }
