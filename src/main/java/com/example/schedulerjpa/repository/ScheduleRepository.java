@@ -14,7 +14,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
         return findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    @Query("SELECT new com.example.schedulerjpa.dto.scheduledto.SearchScheduleResponseDto" +
+    @Query("SELECT new com.example.schedulerjpa.dto.scheduledto.SearchSchedulesPageResponseDto" +
             "( s.title, u.userName, s.task, s.createdAt, s.modifiedAt, COUNT(c.id)) " +
             "FROM Schedule s " +
             "LEFT JOIN s.user u " +
