@@ -1,15 +1,21 @@
 package com.example.schedulerjpa.dto.scheduledto;
+
 import com.example.schedulerjpa.entity.Schedule;
-import lombok.AllArgsConstructor;
+import com.example.schedulerjpa.entity.User;
+import jakarta.persistence.Column;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
-@AllArgsConstructor
-public class SearchScheduleResponseDto {
+public class SearchScheduleByIdResponseDto {
 
     private final Long id;
+
+    private final String userName;
 
     private final String title;
 
@@ -19,9 +25,9 @@ public class SearchScheduleResponseDto {
 
     private final LocalDateTime modifiedAt;
 
-    public SearchScheduleResponseDto(Schedule schedule) {
-
+    public SearchScheduleByIdResponseDto (Schedule schedule) {
         this.id = schedule.getId();
+        this.userName = schedule.getUser().getUserName();
         this.title = schedule.getTitle();
         this.task = schedule.getTask();
         this.createdAt = schedule.getCreatedAt();
