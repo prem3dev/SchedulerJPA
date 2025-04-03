@@ -20,5 +20,6 @@ public abstract class BaseEntity {
     private LocalDateTime createdAt;
 
     @LastModifiedDate
+    @Column
     private LocalDateTime modifiedAt;
 }
