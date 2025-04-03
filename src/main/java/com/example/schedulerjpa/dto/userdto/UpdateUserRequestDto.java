@@ -1,10 +1,10 @@
-package com.example.schedulerjpa.dto;
+package com.example.schedulerjpa.dto.userdto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import com.example.schedulerjpa.customannotation.NotAllNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@NotAllNull
 @Getter
 @AllArgsConstructor
 public class UpdateUserRequestDto {
