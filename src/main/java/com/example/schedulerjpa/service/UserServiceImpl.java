@@ -1,7 +1,7 @@
 package com.example.schedulerjpa.service;
 
 import com.example.schedulerjpa.config.PasswordEncoder;
-import com.example.schedulerjpa.dto.*;
+import com.example.schedulerjpa.dto.userdto.*;
 import com.example.schedulerjpa.entity.User;
 import com.example.schedulerjpa.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +18,7 @@ public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
 
+    @Transactional
     @Override
     public SignUpUserResponseDto signUpUser(SignUpUserRequestDto signUpUserRequestDto) {
 
@@ -45,7 +46,9 @@ public class UserServiceImpl implements UserService{
         User user = userRepository.findUserByUserEmailOrElseThrow(loginRequestDto.getEmail());
 
      if(passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
-         return new LoginResponseDto(user.getId(), user.getUserName());
+         return new LoginResponseDto(user.getId(),
+                 user.getUserName(),
+                 "안녕하세요! " + user.getUserName() + "님 환영합니다.");
      } else {throw new ResponseStatusException(HttpStatus.NOT_FOUND);
      }
     }
@@ -72,22 +75,21 @@ public class UserServiceImpl implements UserService{
 
         if (requestDto.getPresentPassword() != null && !requestDto.getPresentPassword().isBlank()) {
             PasswordEncoder passwordEncoder = new PasswordEncoder();
-           if (passwordEncoder.matches(requestDto.getPresentPassword(), user.getPassword())) {
-               if(requestDto.getNewPassword() != null && !requestDto.getNewPassword().isBlank()) {
-                   user.setPassword(requestDto.getNewPassword());
-               }
-           } else {throw new ResponseStatusException(HttpStatus.BAD_REQUEST);}
+            if (passwordEncoder.matches(requestDto.getPresentPassword(), user.getPassword())) {
+                if (requestDto.getNewPassword() != null && !requestDto.getNewPassword().isBlank()) {
+                    user.setPassword(requestDto.getNewPassword());
+                }
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            }
         }
-
         if (requestDto.getUserName() != null && !requestDto.getUserName().isBlank()) {
             user.setUserName(requestDto.getUserName());
         }
-        if(requestDto.getEmail() != null && !requestDto.getEmail().isBlank()) {
+        if (requestDto.getEmail() != null && !requestDto.getEmail().isBlank()) {
             user.setEmail(requestDto.getEmail());
         }
-
-        User newUser = userRepository.findUserByIdOrElseThrow(id);
-        return new UpdateUserResponseDto(newUser);
+        return new UpdateUserResponseDto(user);
     }
 
     @Override

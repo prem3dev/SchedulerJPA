@@ -1,9 +1,7 @@
 package com.example.schedulerjpa.service;
 
-import com.example.schedulerjpa.dto.*;
-import jakarta.validation.constraints.NotBlank;
+import com.example.schedulerjpa.dto.userdto.*;
 import jakarta.validation.constraints.NotNull;
-
 import java.util.List;
 
 public interface UserService {
