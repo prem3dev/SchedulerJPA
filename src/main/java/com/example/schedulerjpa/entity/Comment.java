@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @Entity
+@Table(name = "comments")
 public class Comment extends BaseEntity{
 
     @Id
