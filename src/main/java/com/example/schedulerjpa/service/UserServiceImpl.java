@@ -78,17 +78,16 @@ public class UserServiceImpl implements UserService{
     @Transactional
     @Override
     public UpdateUserResponseDto updateUser(Long id, UpdateUserRequestDto requestDto) {
+
         User user = userRepository.findUserByIdOrElseThrow(id);
 
-        if (requestDto.getPresentPassword() != null && !requestDto.getPresentPassword().isBlank()) {
-            PasswordEncoder passwordEncoder = new PasswordEncoder();
-            if (passwordEncoder.matches(requestDto.getPresentPassword(), user.getPassword())) {
-                if (requestDto.getNewPassword() != null && !requestDto.getNewPassword().isBlank()) {
-                    user.setPassword(requestDto.getNewPassword());
-                }
-            } else {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-            }
+        PasswordEncoder passwordEncoder = new PasswordEncoder();
+
+        if (!passwordEncoder.matches(requestDto.getPresentPassword(), user.getPassword())) {
+            throw new CustomException(Exceptions.INVALID_PASSWORD);
+        }
+        if (requestDto.getNewPassword() != null && !requestDto.getNewPassword().isBlank()) {
+            user.setPassword(requestDto.getNewPassword());
         }
         if (requestDto.getUserName() != null && !requestDto.getUserName().isBlank()) {
             user.setUserName(requestDto.getUserName());
