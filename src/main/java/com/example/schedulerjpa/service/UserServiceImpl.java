@@ -3,6 +3,8 @@ package com.example.schedulerjpa.service;
 import com.example.schedulerjpa.config.PasswordEncoder;
 import com.example.schedulerjpa.dto.*;
 import com.example.schedulerjpa.entity.User;
+import com.example.schedulerjpa.global.exception.CustomException;
+import com.example.schedulerjpa.global.exception.Exceptions;
 import com.example.schedulerjpa.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService{
@@ -20,6 +23,10 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public SignUpUserResponseDto signUpUser(SignUpUserRequestDto signUpUserRequestDto) {
+
+        if (userRepository.existsByEmail(signUpUserRequestDto.getEmail())) {
+            throw new CustomException(Exceptions.EMAIL_DUPLICATION);
+        }
 
         PasswordEncoder passwordEncoder = new PasswordEncoder();
 
@@ -46,7 +53,7 @@ public class UserServiceImpl implements UserService{
 
      if(passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
          return new LoginResponseDto(user.getId(), user.getUserName());
-     } else {throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+     } else {throw new CustomException(Exceptions.INVALID_PASSWORD);
      }
     }
 
@@ -54,7 +61,7 @@ public class UserServiceImpl implements UserService{
     public List<SearchUserResponseDto> findAllUsers() {
         List<User> userList = userRepository.findAll();
         if(userList.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new CustomException(Exceptions.USER_NOT_FOUND);
         }
         return userList.stream().map(SearchUserResponseDto::new).toList();
     }
@@ -76,7 +83,7 @@ public class UserServiceImpl implements UserService{
                if(requestDto.getNewPassword() != null && !requestDto.getNewPassword().isBlank()) {
                    user.setPassword(requestDto.getNewPassword());
                }
-           } else {throw new ResponseStatusException(HttpStatus.BAD_REQUEST);}
+           } else {throw new CustomException(Exceptions.INVALID_PASSWORD);}
         }
 
         if (requestDto.getUserName() != null && !requestDto.getUserName().isBlank()) {
@@ -90,12 +97,13 @@ public class UserServiceImpl implements UserService{
         return new UpdateUserResponseDto(newUser);
     }
 
+    @Transactional
     @Override
     public void deleteUserById(Long id, String password) {
         User user = userRepository.findUserByIdOrElseThrow(id);
         PasswordEncoder passwordEncoder = new PasswordEncoder();
         if(passwordEncoder.matches(password, user.getPassword())) {
             userRepository.delete(user);
-        } else {throw new ResponseStatusException(HttpStatus.BAD_REQUEST);}
+        } else {throw new CustomException(Exceptions.INVALID_PASSWORD);}
     }
 }

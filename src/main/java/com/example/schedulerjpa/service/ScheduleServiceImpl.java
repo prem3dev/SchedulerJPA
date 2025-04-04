@@ -6,13 +6,13 @@ import com.example.schedulerjpa.dto.UpdateScheduleRequestDto;
 import com.example.schedulerjpa.dto.UpdateScheduleResponseDto;
 import com.example.schedulerjpa.entity.Schedule;
 import com.example.schedulerjpa.entity.User;
+import com.example.schedulerjpa.global.exception.CustomException;
+import com.example.schedulerjpa.global.exception.Exceptions;
 import com.example.schedulerjpa.repository.ScheduleRepository;
 import com.example.schedulerjpa.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -43,7 +43,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         List<Schedule> scheduleList = scheduleRepository.findAll();
 
         if(scheduleList.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new CustomException(Exceptions.SCHEDULE_NOT_FOUND);
         }
         return scheduleList.stream().map(SearchScheduleResponseDto::new).toList();
     }
