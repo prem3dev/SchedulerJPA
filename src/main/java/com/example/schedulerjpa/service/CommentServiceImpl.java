@@ -8,6 +8,8 @@ import com.example.schedulerjpa.dto.commentdto.UpdateCommentResponseDto;
 import com.example.schedulerjpa.entity.Comment;
 import com.example.schedulerjpa.entity.Schedule;
 import com.example.schedulerjpa.entity.User;
+import com.example.schedulerjpa.global.exception.CustomException;
+import com.example.schedulerjpa.global.exception.Exceptions;
 import com.example.schedulerjpa.repository.CommentRepository;
 import com.example.schedulerjpa.repository.ScheduleRepository;
 import com.example.schedulerjpa.repository.UserRepository;
@@ -50,7 +52,7 @@ public class CommentServiceImpl implements CommentService{
         if (!comments.isEmpty()) {
             searchCommentsResponseDtos = comments.stream().map(SearchCommentsResponseDto::new).toList();
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new CustomException(Exceptions.COMMENT_NOT_FOUND);
         }
 
         return searchCommentsResponseDtos;
@@ -65,7 +67,7 @@ public class CommentServiceImpl implements CommentService{
         if (user.getPassword().equals(comment.getUser().getPassword())) {
             comment.setContents(contents);
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new CustomException(Exceptions.UNAUTHORIZED_ACCESS);
         }
         return new UpdateCommentResponseDto(comment);
     }
@@ -79,7 +81,7 @@ public class CommentServiceImpl implements CommentService{
         if (user.getPassword().equals(comment.getUser().getPassword())) {
             commentRepository.delete(comment);
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new CustomException(Exceptions.UNAUTHORIZED_ACCESS);
         }
     }
 }

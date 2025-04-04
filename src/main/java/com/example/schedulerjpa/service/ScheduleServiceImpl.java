@@ -3,6 +3,8 @@ package com.example.schedulerjpa.service;
 import com.example.schedulerjpa.dto.scheduledto.*;
 import com.example.schedulerjpa.entity.Schedule;
 import com.example.schedulerjpa.entity.User;
+import com.example.schedulerjpa.global.exception.CustomException;
+import com.example.schedulerjpa.global.exception.Exceptions;
 import com.example.schedulerjpa.repository.ScheduleRepository;
 import com.example.schedulerjpa.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +48,7 @@ public class ScheduleServiceImpl implements ScheduleService {
       List<SearchSchedulesPageResponseDto> scheduleList = scheduleRepository.findAllSchedules(pageable).getContent();
 
         if(scheduleList.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new CustomException(Exceptions.SCHEDULE_NOT_FOUND);
         }
         return scheduleList;
     }
@@ -81,7 +83,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule schedule = scheduleRepository.findByIdOrElseThrow(id);
 
         if (!user.getPassword().equals(schedule.getUser().getPassword())) {
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        throw new CustomException(Exceptions.UNAUTHORIZED_ACCESS);
         }
 
         if (requestDto.getTitle() != null && !requestDto.getTitle().isBlank()) {
@@ -102,9 +104,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule schedule = scheduleRepository.findByIdOrElseThrow(id);
 
         if (!user.getPassword().equals(schedule.getUser().getPassword())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new CustomException(Exceptions.UNAUTHORIZED_ACCESS);
         }
-
         scheduleRepository.delete(schedule);
     }
 }
