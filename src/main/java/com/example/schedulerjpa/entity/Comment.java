@@ -18,11 +18,11 @@ public class Comment extends BaseEntity{
     @Setter
     private String contents;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "schedule_id", nullable = false)
     private Schedule schedule;
 
