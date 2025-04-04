@@ -42,7 +42,7 @@ public class CommentController {
     //댓글 수정
     // 로그인한 유저가 본인의 댓글만 수정 할 수 있도록 로직 구성
     @Validated
-    @PatchMapping("/individual/{commentId}")
+    @PatchMapping
     public ResponseEntity<UpdateCommentResponseDto> updateCommentByCommentId (
             @PathVariable @NotNull Long commentId,
             @RequestParam @NotBlank @Size(max = 30) String contents,
@@ -52,7 +52,7 @@ public class CommentController {
 
     //댓글 삭제
     // 로그인한 유저가 본인의 댓글만 삭제 할 수 있도록 로직 구성
-    @DeleteMapping("/individual/{commentId}")
+    @DeleteMapping
     public ResponseEntity<Void> deleteCommentByCommentId (
             @PathVariable @NotNull Long commentId, @SessionAttribute(name = Const.LOGIN_USER, required = false) Long loginUserId) {
         commentService.deleteCommentByCommentId(commentId, loginUserId);

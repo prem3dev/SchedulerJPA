@@ -6,6 +6,8 @@ import com.example.schedulerjpa.dto.scheduledto.UpdateScheduleRequestDto;
 import com.example.schedulerjpa.dto.scheduledto.UpdateScheduleResponseDto;
 import com.example.schedulerjpa.entity.Schedule;
 import com.example.schedulerjpa.entity.User;
+import com.example.schedulerjpa.global.exception.CustomException;
+import com.example.schedulerjpa.global.exception.Exceptions;
 import com.example.schedulerjpa.repository.ScheduleRepository;
 import com.example.schedulerjpa.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +46,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         List<Schedule> scheduleList = scheduleRepository.findAll();
 
         if(scheduleList.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new CustomException(Exceptions.SCHEDULE_NOT_FOUND);
         }
         return scheduleList.stream().map(SearchScheduleResponseDto::new).toList();
     }
@@ -79,7 +81,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule schedule = scheduleRepository.findByIdOrElseThrow(id);
 
         if (!user.getPassword().equals(schedule.getUser().getPassword())) {
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        throw new CustomException(Exceptions.UNAUTHORIZED_ACCESS);
         }
 
         if (requestDto.getTitle() != null && !requestDto.getTitle().isBlank()) {
@@ -95,14 +97,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Transactional
     @Override
     public void deleteSchedule(Long id, Long loginUserId) {
-
         User user = userRepository.findUserByIdOrElseThrow(loginUserId);
         Schedule schedule = scheduleRepository.findByIdOrElseThrow(id);
-
         if (!user.getPassword().equals(schedule.getUser().getPassword())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new CustomException(Exceptions.UNAUTHORIZED_ACCESS);
         }
-
         scheduleRepository.delete(schedule);
     }
 }
