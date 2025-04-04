@@ -15,7 +15,7 @@ public class LoginFilter implements Filter {
             "/users",
             "/users/login",
             "/schedules/pages",
-            "/schedules/indeividuals",
+            "/schedules/each",
             "/comments/total"};
 
     @Override
