@@ -1,6 +1,4 @@
 package com.example.schedulerjpa.service;
-
-import com.example.schedulerjpa.config.PasswordEncoder;
 import com.example.schedulerjpa.dto.commentdto.CreationCommentRequestDto;
 import com.example.schedulerjpa.dto.commentdto.CreationCommentResponseDto;
 import com.example.schedulerjpa.dto.commentdto.SearchCommentsResponseDto;
@@ -14,10 +12,8 @@ import com.example.schedulerjpa.repository.CommentRepository;
 import com.example.schedulerjpa.repository.ScheduleRepository;
 import com.example.schedulerjpa.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
