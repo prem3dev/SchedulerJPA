@@ -39,7 +39,7 @@ public class ScheduleController {
 
     //개별 일정 조회
     @Validated
-    @GetMapping("/individual/{id}")
+    @GetMapping("/each/{id}")
     public ResponseEntity<SearchScheduleResponseDto> findScheduleById (
             @PathVariable @NotNull Long id) {
         return new ResponseEntity<>(scheduleService.findScheduleById(id), HttpStatus.OK);
@@ -47,7 +47,7 @@ public class ScheduleController {
 
     //개별 일정 동적 수정
     @Validated
-    @PatchMapping("/individual/{id}")
+    @PatchMapping("/individuals")
     public ResponseEntity<UpdateScheduleResponseDto> updateSchedule(
             @PathVariable @NotNull Long id,
             @RequestBody @Valid UpdateScheduleRequestDto requestDto,
@@ -58,7 +58,7 @@ public class ScheduleController {
 
     //개별 일정 삭제
     @Validated
-    @DeleteMapping("/individual/{id}")
+    @DeleteMapping("/individuals")
     public ResponseEntity<Void> deleteSchedule (
             @PathVariable @NotNull Long id,
             @SessionAttribute(name = Const.LOGIN_USER, required = false) Long loginUserId) {
