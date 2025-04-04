@@ -51,14 +51,14 @@ public class UserController {
 
     //유저 단건 조회
     @Validated
-    @GetMapping("/individual/{id}")
+    @GetMapping("/individuals/{id}")
     public ResponseEntity<SearchUserResponseDto> findUserById(@PathVariable @NotNull Long id) {
         return new ResponseEntity<>(userService.findUserById(id), HttpStatus.OK);
     }
 
     //유저 정보 동적 수정( 비밀번호 수정일 경우 요청에 새 비밀 번호 만으로 수정할 수 없다.)
     @Validated
-    @PatchMapping("/individual/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<UpdateUserResponseDto> updateUser(
             @PathVariable @NotNull Long id, @RequestBody UpdateUserRequestDto requestDto) {
         return new ResponseEntity<>(userService.updateUser(id, requestDto), HttpStatus.OK);
@@ -67,7 +67,7 @@ public class UserController {
     //회원 탈퇴
     //비밀 번호를 조건으로 회원 탈퇴
     @Validated
-    @DeleteMapping("/individual/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUserById(@PathVariable @NotNull Long id, @RequestParam @NotBlank String password) {
        userService.deleteUserById(id, password);
         return new ResponseEntity<>(HttpStatus.OK);

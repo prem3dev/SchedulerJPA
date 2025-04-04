@@ -50,7 +50,7 @@ public class ScheduleController {
 
     //개별 일정 동적 수정
     @Validated
-    @PatchMapping("/individuals/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<UpdateScheduleResponseDto> updateSchedule(
             @PathVariable @NotNull Long id,
             @RequestBody @Valid UpdateScheduleRequestDto requestDto,
@@ -61,7 +61,7 @@ public class ScheduleController {
 
     //개별 일정 삭제
     @Validated
-    @DeleteMapping("/individuals/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSchedule (
             @PathVariable @NotNull Long id,
             @SessionAttribute(name = Const.LOGIN_USER, required = false) Long loginUserId) {
